@@ -3,7 +3,9 @@ package com.aryan.offlinefirstchatapp.sync
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.aryan.offlinefirstchatapp.data.remote.api.ChatApiService
 import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketClient
+import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketMessage
 import com.aryan.offlinefirstchatapp.domain.model.SyncStatus
 import com.aryan.offlinefirstchatapp.domain.repository.MessageRepository
 
@@ -11,28 +13,41 @@ class SyncWorker(
     context: Context,
     params: WorkerParameters,
     private val repository: MessageRepository,
-    private val webSocketClient: WebSocketClient
+    private val chatApiService: ChatApiService
 ) : CoroutineWorker(context, params){
 
     override suspend fun doWork(): Result {
-        val pending = repository.getPendingMessages()
 
         return try {
-            pending.forEach { message ->
-                webSocketClient.sendMessage(message)
-                repository.updateSyncStatus(message.id, SyncStatus.SENT)
-            }
-            Result.success()
-        } catch (e: Exception){
-            if (runAttemptCount< 3){
+            val pending = repository.getPendingMessages()
+
+            if (pending.isEmpty()) return Result.success()
+            val response = chatApiService.syncMessages(
+                pending.map { message ->
+                    WebSocketMessage(
+                        id = message.id,
+                        chatId = message.chatId,
+                        senderId = message.senderId,
+                        content = message.content,
+                        timestamp = message.timeStamp
+                    )
+                }
+            )
+            if (response.isSuccessful){
+                val body = response.body()!!
+                body.syncedIds.forEach{ id ->
+                    repository.updateSyncStatus(id, SyncStatus.SENT)
+                }
+                body.failedIds.forEach{ id ->
+                    repository.updateSyncStatus(id, SyncStatus.FAILED)
+                }
+                Result.success()
+            }else{
                 Result.retry()
-            } else {
-                repository.updateSyncStatus(
-                    pending.first().id,
-                    SyncStatus.FAILED
-                )
-                Result.failure()
             }
+        } catch (e: Exception){
+            if (runAttemptCount < 3) Result.retry()
+            else Result.failure()
         }
     }
 }
