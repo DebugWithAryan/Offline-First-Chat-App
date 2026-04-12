@@ -3,6 +3,7 @@ package com.aryan.offlinefirstchatapp.sync
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketClient
 import com.aryan.offlinefirstchatapp.domain.model.SyncStatus
 import com.aryan.offlinefirstchatapp.domain.repository.MessageRepository
 
