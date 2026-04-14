@@ -28,6 +28,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    //noinspection WrongGradleMethod
     kotlin {
         jvmToolchain(17)
     }
@@ -47,6 +48,11 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
+    // Lifecycle
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Room
     implementation(libs.room.runtime)
@@ -67,4 +73,5 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.work)
     ksp(libs.hilt.androidx.compiler)
+    implementation(libs.hilt.navigation.compose)
 }
