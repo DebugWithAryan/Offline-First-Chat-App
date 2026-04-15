@@ -10,4 +10,5 @@ interface MessageRepository {
     fun getMessages(chatId: String): Flow<List<Message>>
     suspend fun getPendingMessages(): List<Message>
     suspend fun  updateSyncStatus(messageId: String, status: SyncStatus)
+    suspend fun retryFailedMessage(messageId: String)
 }

@@ -11,5 +11,6 @@ data class MessageEntity(
     val senderId: String,
     val content: String,
     val timeStamp: Long,
+    val sequence: Long = 0L,
     val syncStatus: String
 )

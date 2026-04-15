@@ -80,7 +80,11 @@ fun ChatScreen (
                     ){message ->
                         MessageItem(
                             message = message,
-                            currentUserId = currentUserId
+                            currentUserId = currentUserId,
+                            onRetry = {messageId ->
+                                viewModel.retryMessage(messageId)
+
+                            }
                         )
                     }
                 }

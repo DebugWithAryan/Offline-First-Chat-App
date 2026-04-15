@@ -33,4 +33,9 @@ class MessageRepositoryImpl(
     override suspend fun updateSyncStatus(messageId: String, status: SyncStatus) {
         dao.updateSyncStatus(messageId, status.name)
     }
+
+    override suspend fun retryFailedMessage(messageId: String) {
+        dao.updateSyncStatus(messageId, SyncStatus.PENDING.name)
+        syncScheduler.schedule()
+    }
 }

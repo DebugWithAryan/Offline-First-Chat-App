@@ -1,6 +1,7 @@
 package com.aryan.offlinefirstchatapp.ui.chat.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,9 +22,15 @@ import com.aryan.offlinefirstchatapp.domain.model.SyncStatus
 @Composable
 fun MessageItem(
     message: Message,
-    currentUserId: String
+    currentUserId: String,
+    onRetry: (String) -> Unit
 ){
     val isOwnMessage = message.senderId == currentUserId
+    val statusText = when (message.syncStatus) {
+        SyncStatus.PENDING -> "⏱ Sending"
+        SyncStatus.SENT -> "✓ Sent"
+        SyncStatus.FAILED -> "✗ Failed — tap to retry"
+    }
 
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
@@ -51,16 +58,18 @@ fun MessageItem(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = when(message.syncStatus){
-                    SyncStatus.PENDING -> "⏱ Sending"
-                    SyncStatus.SENT    -> "✓ Sent"
-                    SyncStatus.FAILED  -> "✗ Failed"
-                },
+                text = statusText,
                 style = MaterialTheme.typography.labelSmall,
-                color = if (isOwnMessage)
+                color = if (message.syncStatus == SyncStatus.FAILED)
+                    MaterialTheme.colorScheme.error
+                else if (isOwnMessage)
                     MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
                 else
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                modifier = if (message.syncStatus == SyncStatus.FAILED)
+                    Modifier.clickable { onRetry(message.id) }
+                else
+                    Modifier
             )
         }
     }

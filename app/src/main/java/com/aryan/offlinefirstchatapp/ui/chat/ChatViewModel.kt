@@ -5,11 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketClient
 import com.aryan.offlinefirstchatapp.domain.model.Message
 import com.aryan.offlinefirstchatapp.domain.model.SyncStatus
+import com.aryan.offlinefirstchatapp.domain.repository.MessageRepository
+import com.aryan.offlinefirstchatapp.domain.usecase.GetMessagesUseCase
+import com.aryan.offlinefirstchatapp.domain.usecase.SendMessageUseCase
 import com.aryan.offlinefirstchatapp.ui.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -18,7 +22,8 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val sendMessageUseCase: SendMessageUseCase,
     private val getMessagesUseCase: GetMessagesUseCase,
-    private val webSocketClient: WebSocketClient
+    private val webSocketClient: WebSocketClient,
+    private val repository: MessageRepository
 ) : ViewModel(){
 
     private val _messages = MutableStateFlow<UiState<List<Message>>>(UiState.Loading)
@@ -68,6 +73,12 @@ class ChatViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         webSocketClient.disconnect()
+    }
+
+    fun retryMessage(messageId: String){
+        viewModelScope.launch {
+            repository.retryFailedMessage(messageId)
+        }
     }
 
 }

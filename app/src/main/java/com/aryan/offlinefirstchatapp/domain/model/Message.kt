@@ -6,5 +6,6 @@ data class Message(
     val senderId: String,
     val content: String,
     val timeStamp: Long,
+    val sequence: Long = 0L,
     val syncStatus: SyncStatus
 )
