@@ -32,7 +32,7 @@ fun ChatScreen (
     val listState = rememberLazyListState()
 
     LaunchedEffect(chatId) {
-        viewModel.loadChat(chatId)
+        viewModel.loadChat(chatId, currentUserId)
     }
 
     val messages = when (val state = messageState){
@@ -50,7 +50,7 @@ fun ChatScreen (
         bottomBar = {
             MessageInput(
                 onSendMessage = {content ->
-                    viewModel.sendMessage(content, currentUserId)
+                    viewModel.sendMessage(content)
 
                 }
             )

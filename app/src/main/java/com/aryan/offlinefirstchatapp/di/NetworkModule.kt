@@ -37,6 +37,6 @@ object NetworkModule {
     fun provideWebSocketClient(
         sessionManager: SessionManager
     ): WebSocketClient{
-        return WebSocketClient(token = SessionManager.getToken())
+        return WebSocketClient(token = sessionManager.getToken())
     }
 }

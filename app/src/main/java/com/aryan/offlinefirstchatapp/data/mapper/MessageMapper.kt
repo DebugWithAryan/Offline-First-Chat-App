@@ -12,7 +12,7 @@ object MessageMapper {
             chatId = chatId,
             senderId = senderId,
             content = content,
-            timeStamp = timeStamp,
+            timestamp = timestamp,
             syncStatus = SyncStatus.valueOf(syncStatus)
 
         )
@@ -24,7 +24,7 @@ object MessageMapper {
             chatId = chatId,
             senderId = senderId,
             content = content,
-            timeStamp = timeStamp,
+            timestamp = timestamp,
             syncStatus = syncStatus.name
         )
     }

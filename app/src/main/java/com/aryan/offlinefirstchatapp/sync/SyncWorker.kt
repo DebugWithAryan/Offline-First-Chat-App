@@ -33,7 +33,7 @@ class SyncWorker @AssistedInject constructor(
                         chatId = message.chatId,
                         senderId = message.senderId,
                         content = message.content,
-                        timestamp = message.timeStamp
+                        timestamp = message.timestamp
                     )
                 }
             )

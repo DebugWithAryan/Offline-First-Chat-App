@@ -86,7 +86,7 @@ class ChatViewModel @Inject constructor(
                 chatId = _currentChatId.value ?: return@launch,
                 senderId = _currentUserId.value ?: return@launch,
                 content = content,
-                timeStamp = System.currentTimeMillis(),
+                timestamp = System.currentTimeMillis(),
                 syncStatus = SyncStatus.PENDING
             )
             sendMessageUseCase(message)
