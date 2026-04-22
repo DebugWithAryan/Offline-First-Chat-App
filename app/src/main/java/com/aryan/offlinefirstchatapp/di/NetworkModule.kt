@@ -1,5 +1,6 @@
 package com.aryan.offlinefirstchatapp.di
 
+import com.aryan.offlinefirstchatapp.data.local.SessionManager
 import com.aryan.offlinefirstchatapp.data.remote.api.ChatApiService
 import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketClient
 import dagger.Module
@@ -14,11 +15,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    private const val BASE_URL = "http://10.0.2.2:8080/api/"
+
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit{
         return Retrofit.Builder()
-            .baseUrl("https://yourserver.com/api/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -31,7 +34,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideWebSocketClient(): WebSocketClient{
-        return WebSocketClient(token = "user_token_here")
+    fun provideWebSocketClient(
+        sessionManager: SessionManager
+    ): WebSocketClient{
+        return WebSocketClient(token = SessionManager.getToken())
     }
 }

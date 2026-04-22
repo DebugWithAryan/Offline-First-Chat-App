@@ -7,17 +7,25 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import javax.inject.Inject
 
-class WebSocketClient(
-    private val token: String
-) {
+class WebSocketClient @Inject constructor(){
     private val client = OkHttpClient()
     private var webSocket: WebSocket? = null
     private val gson = Gson()
+    private var token: String = ""
 
-    fun connect(onMessageReceived: (WebSocketMessage) -> Unit){
+    fun initialize(token: String){
+        this.token = token
+    }
+
+    fun connect(
+        userId: String,
+        onMessageReceived: (WebSocketMessage) -> Unit,
+        onConnectionLost: () -> Unit
+    ){
         val request = Request.Builder()
-            .url("ws://yourserver.com/chat")
+            .url("ws://10.0.2.2:8080/chat?$userId")
             .addHeader("Authorization", "Bearer $token")
             .build()
 
@@ -28,7 +36,7 @@ class WebSocketClient(
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                // SyncWorker will handle retry via WorkManager
+                onConnectionLost()
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
@@ -38,15 +46,8 @@ class WebSocketClient(
         })
     }
 
-    fun sendMessage(message: Message){
-        val wsMessage = WebSocketMessage(
-            id = message.id,
-            chatId = message.chatId,
-            senderId = message.senderId,
-            content = message.content,
-            timestamp = message.timeStamp
-        )
-        webSocket?.send(gson.toJson(wsMessage))
+    fun sendMessage(message: WebSocketMessage){
+        webSocket?.send(gson.toJson(message))
     }
 
     fun disconnect(){

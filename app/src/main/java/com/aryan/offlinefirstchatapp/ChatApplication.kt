@@ -9,16 +9,13 @@ import javax.inject.Inject
 
 
 @HiltAndroidApp
-class ChatApplication : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        val config = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-        WorkManager.initialize(this,config)
-    }
+class ChatApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

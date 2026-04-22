@@ -74,4 +74,6 @@ dependencies {
     implementation(libs.hilt.work)
     ksp(libs.hilt.androidx.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    implementation("androidx.security:security-crypto:1.1.0")
 }

@@ -5,7 +5,7 @@ data class Message(
     val chatId: String,
     val senderId: String,
     val content: String,
-    val timeStamp: Long,
+    val timestamp: Long,
     val sequence: Long = 0L,
     val syncStatus: SyncStatus
 )
