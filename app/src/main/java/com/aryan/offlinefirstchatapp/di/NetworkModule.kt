@@ -1,6 +1,7 @@
 package com.aryan.offlinefirstchatapp.di
 
 import com.aryan.offlinefirstchatapp.data.local.SessionManager
+import com.aryan.offlinefirstchatapp.data.remote.api.AuthApiService
 import com.aryan.offlinefirstchatapp.data.remote.api.ChatApiService
 import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketClient
 import dagger.Module
@@ -38,5 +39,11 @@ object NetworkModule {
         sessionManager: SessionManager
     ): WebSocketClient{
         return WebSocketClient(token = sessionManager.getToken())
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApiService(retrofit: Retrofit): AuthApiService{
+        return retrofit.create(AuthApiService::class.java)
     }
 }
