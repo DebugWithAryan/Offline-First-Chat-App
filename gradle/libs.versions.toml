@@ -17,8 +17,11 @@ okhttp = "5.0.0-alpha.14"
 gson = "2.11.0"
 retrofit = "2.11.0"
 lifecycleViewmodelCompose = "2.9.0"
+navigation = "2.9.0"
+
 
 [libraries]
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

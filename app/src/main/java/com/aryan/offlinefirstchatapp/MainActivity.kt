@@ -4,16 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.aryan.offlinefirstchatapp.data.local.SessionManager
 import com.aryan.offlinefirstchatapp.ui.auth.LoginScreen
 import com.aryan.offlinefirstchatapp.ui.chat.components.ChatScreen
+import com.aryan.offlinefirstchatapp.ui.navigation.AppNavigation
 import com.aryan.offlinefirstchatapp.ui.theme.OfflineFirstChatAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -28,18 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OfflineFirstChatAppTheme {
-                if(sessionManager.isLoggedIn()){
-                    ChatScreen(
-                        chatId = "chat_457",
-                        currentUserId = sessionManager.getUserId()
-                    )
-                } else {
-                    LoginScreen(
-                        onLoginSuccess = { userId ->
-                            
-                        }
-                    )
-                }
+                AppNavigation(sessionManager = sessionManager)
             }
         }
     }

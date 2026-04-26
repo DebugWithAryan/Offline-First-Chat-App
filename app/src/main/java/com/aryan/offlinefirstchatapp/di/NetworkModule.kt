@@ -33,13 +33,7 @@ object NetworkModule {
         return retrofit.create(ChatApiService::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideWebSocketClient(
-        sessionManager: SessionManager
-    ): WebSocketClient{
-        return WebSocketClient(token = sessionManager.getToken())
-    }
+
 
     @Provides
     @Singleton

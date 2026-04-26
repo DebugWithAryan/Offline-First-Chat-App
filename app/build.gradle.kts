@@ -76,4 +76,6 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation("androidx.security:security-crypto:1.1.0")
+
+    implementation(libs.androidx.navigation.compose)
 }

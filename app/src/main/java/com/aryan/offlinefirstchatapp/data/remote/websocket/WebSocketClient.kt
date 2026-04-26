@@ -1,5 +1,6 @@
 package com.aryan.offlinefirstchatapp.data.remote.websocket
 
+import com.aryan.offlinefirstchatapp.data.local.SessionManager
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -8,7 +9,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import javax.inject.Inject
 
-class WebSocketClient(private val token: String = "") {
+class WebSocketClient(private val sessionManager: SessionManager) {
 
     private val client = OkHttpClient()
     private var webSocket: WebSocket? = null
@@ -19,6 +20,7 @@ class WebSocketClient(private val token: String = "") {
         onMessageReceived: (WebSocketMessage) -> Unit,
         onConnectionLost: () -> Unit
     ) {
+        val token = sessionManager.getToken()
         val request = Request.Builder()
             .url("ws://10.0.2.2:8080/chat?$userId")
             .addHeader("Authorization", "Bearer $token")
