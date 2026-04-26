@@ -29,7 +29,7 @@ class UserListViewModel @Inject constructor(
         loadUsers()
     }
 
-    private fun loadUsers(){
+    fun loadUsers(){
         viewModelScope.launch {
             _users.value = UiState.Loading
             try {
