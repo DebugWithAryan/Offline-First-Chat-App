@@ -26,6 +26,12 @@ data class UserResponse(
     val username: String
 )
 
+data class CreateChatRequest(
+    val userId1: String,
+    val userId2: String
+)
+
+data class ChatResponse(val chatId: String)
 interface AuthApiService {
     @POST("auth/register")
     suspend fun register(
@@ -39,4 +45,9 @@ interface AuthApiService {
 
     @GET("auth/users")
     suspend fun getUsers(): Response<List<UserResponse>>
+
+    @POST("chats")
+    suspend fun createChat(
+        @Body request: CreateChatRequest
+    ): Response<ChatResponse>
 }
