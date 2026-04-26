@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.aryan.offlinefirstchatapp.data.local.SessionManager
 import com.aryan.offlinefirstchatapp.ui.auth.LoginScreen
 import com.aryan.offlinefirstchatapp.ui.chat.components.ChatScreen
+import com.aryan.offlinefirstchatapp.ui.userList.UserListScreen
 
 sealed class Screen(val route: String){
     object Login: Screen("login")
@@ -62,7 +63,15 @@ fun AppNavigation(sessionManager: SessionManager) {
         ) { backStackEntry ->
             val chatId = backStackEntry.arguments?.getString("chatId") ?: ""
             val userId = backStackEntry.arguments?.getString("userId") ?: ""
-            ChatScreen(chatId = chatId, currentUserId = userId)
+            ChatScreen(
+                chatId = chatId,
+                currentUserId = userId,
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

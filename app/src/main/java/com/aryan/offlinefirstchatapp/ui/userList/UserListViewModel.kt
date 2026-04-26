@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aryan.offlinefirstchatapp.data.local.SessionManager
 import com.aryan.offlinefirstchatapp.data.remote.api.AuthApiService
+import com.aryan.offlinefirstchatapp.data.remote.api.CreateChatRequest
 import com.aryan.offlinefirstchatapp.data.remote.api.UserResponse
 import com.aryan.offlinefirstchatapp.ui.common.UiState
 import kotlinx.coroutines.flow.MutableStateFlow

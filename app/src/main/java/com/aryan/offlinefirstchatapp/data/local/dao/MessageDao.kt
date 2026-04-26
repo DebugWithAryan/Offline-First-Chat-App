@@ -13,9 +13,8 @@ interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessage(message: MessageEntity)
 
-    @Query("SELECT * FROM messages WHERE chatId = :chatId ORDER BY sequence ASC, timeStamp ASC")
+    @Query("SELECT * FROM messages WHERE chatId = :chatId ORDER BY sequence ASC, timestamp ASC")
     fun getMessages(chatId: String): Flow<List<MessageEntity>>
-
     @Query("SELECT * FROM messages WHERE syncStatus = 'PENDING'")
     suspend fun getPendingMessages(): List<MessageEntity>
 

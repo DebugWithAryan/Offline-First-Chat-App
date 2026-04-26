@@ -8,16 +8,17 @@ import com.aryan.offlinefirstchatapp.data.remote.api.LoginRequest
 import com.aryan.offlinefirstchatapp.data.remote.api.RegisterRequest
 import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketClient
 import com.aryan.offlinefirstchatapp.ui.common.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authApiService: AuthApiService,
     private val sessionManager: SessionManager,
-    private val webSocketClient: WebSocketClient
 ): ViewModel() {
     private val _authState = MutableStateFlow<UiState<String>>(UiState.Loading)
     val authState: StateFlow<UiState<String>> = _authState.asStateFlow()

@@ -13,6 +13,7 @@ object MessageMapper {
             senderId = senderId,
             content = content,
             timestamp = timestamp,
+            sequence = sequence,
             syncStatus = SyncStatus.valueOf(syncStatus)
 
         )
@@ -25,6 +26,7 @@ object MessageMapper {
             senderId = senderId,
             content = content,
             timestamp = timestamp,
+            sequence = sequence,
             syncStatus = syncStatus.name
         )
     }

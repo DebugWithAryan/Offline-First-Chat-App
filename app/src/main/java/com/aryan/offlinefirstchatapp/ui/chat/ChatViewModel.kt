@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.aryan.offlinefirstchatapp.data.remote.websocket.WebSocketClient
 import com.aryan.offlinefirstchatapp.domain.model.Message
 import com.aryan.offlinefirstchatapp.domain.model.SyncStatus
+import com.aryan.offlinefirstchatapp.domain.repository.ChatConnectionRepository
+import com.aryan.offlinefirstchatapp.domain.repository.MessageRepository
 import com.aryan.offlinefirstchatapp.domain.usecase.GetMessagesUseCase
+import com.aryan.offlinefirstchatapp.domain.usecase.LogoutUseCase
 import com.aryan.offlinefirstchatapp.domain.usecase.SaveIncomingMessageUseCase
 import com.aryan.offlinefirstchatapp.domain.usecase.SendMessageUseCase
 import com.aryan.offlinefirstchatapp.ui.common.UiState
@@ -24,7 +27,9 @@ class ChatViewModel @Inject constructor(
     private val sendMessageUseCase: SendMessageUseCase,
     private val getMessagesUseCase: GetMessagesUseCase,
     private val saveIncomingMessageUseCase: SaveIncomingMessageUseCase,
-    private val webSocketClient: WebSocketClient,
+    private val chatConnectionRepository: ChatConnectionRepository,
+    private val messageRepository: MessageRepository,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel(){
 
     private val _messages = MutableStateFlow<UiState<List<Message>>>(UiState.Loading)
@@ -38,6 +43,12 @@ class ChatViewModel @Inject constructor(
         _currentUserId.value = userId
         observeMessages(chatId)
         connectWebSocket(userId)
+    }
+    fun logout(onLogout: () -> Unit) {
+        viewModelScope.launch {
+            logoutUseCase()
+            onLogout()
+        }
     }
 
     private fun observeMessages(chatId: String){
@@ -54,29 +65,16 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun connectWebSocket(userId: String){
-        viewModelScope.launch {
-            webSocketClient.connect(
-                userId = userId,
-                onMessageReceived = { wsMessage ->
-                    viewModelScope.launch {
-                        saveIncomingMessageUseCase(
-                            Message(
-                                id = wsMessage.id,
-                                chatId = wsMessage.chatId,
-                                senderId = wsMessage.senderId,
-                                content = wsMessage.content,
-                                syncStatus = SyncStatus.SENT,
-                                timestamp = wsMessage.timestamp
-                            )
-                        )
-                    }
-                },
-                onConnectionLost = {
-
+    private fun connectWebSocket(userId: String) {
+        chatConnectionRepository.connect(
+            userId = userId,
+            onMessageReceived = { message ->
+                viewModelScope.launch {
+                    saveIncomingMessageUseCase(message)
                 }
-            )
-        }
+            },
+            onConnectionLost = {}
+        )
     }
 
     fun sendMessage(content: String){
@@ -95,12 +93,12 @@ class ChatViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        webSocketClient.disconnect()
+        chatConnectionRepository.disconnect()
     }
 
     fun retryMessage(messageId: String){
         viewModelScope.launch {
-
+            messageRepository.retryFailedMessage(messageId)
         }
     }
 
