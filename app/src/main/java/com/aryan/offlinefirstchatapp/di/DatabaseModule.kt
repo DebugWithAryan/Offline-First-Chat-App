@@ -16,12 +16,14 @@ import javax.inject.Singleton
 object DatabaseModule {
     @Provides
     @Singleton
-    fun provideChatDatabase(@ApplicationContext context: Context): ChatDatabase{
+    fun provideChatDatabase(@ApplicationContext context: Context): ChatDatabase {
         return Room.databaseBuilder(
             context,
             ChatDatabase::class.java,
             "chat_database"
-        ).build()
+        )
+            .addMigrations(ChatDatabase.MIGRATION_1_2)
+            .build()
     }
 
     @Provides

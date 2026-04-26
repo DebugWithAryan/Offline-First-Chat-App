@@ -7,12 +7,14 @@ import com.aryan.offlinefirstchatapp.data.remote.api.AuthApiService
 import com.aryan.offlinefirstchatapp.data.remote.api.CreateChatRequest
 import com.aryan.offlinefirstchatapp.data.remote.api.UserResponse
 import com.aryan.offlinefirstchatapp.ui.common.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class UserListViewModel @Inject constructor(
     private val authApiService: AuthApiService,
     private val sessionManager: SessionManager

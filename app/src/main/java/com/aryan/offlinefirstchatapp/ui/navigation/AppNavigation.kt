@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import com.aryan.offlinefirstchatapp.data.local.SessionManager
 import com.aryan.offlinefirstchatapp.ui.auth.LoginScreen
 import com.aryan.offlinefirstchatapp.ui.chat.components.ChatScreen
-import com.aryan.offlinefirstchatapp.ui.userlist.UserListScreen
+import com.aryan.offlinefirstchatapp.ui.userList.UserListScreen
 
 sealed class Screen(val route: String){
     object Login: Screen("login")
